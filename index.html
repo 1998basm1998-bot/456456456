@@ -3,37 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة المركز التعليمي</title>
+    <title>نظام إدارة المركز التعليمي - 100 ميزة</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="loadingSpinner" class="hidden">جاري التحميل...</div>
+    <div id="confetti" class="hidden">🎉 تم الحفظ بنجاح! 🎉</div>
+    <div id="contextMenu" class="hidden">
+        <button onclick="document.execCommand('copy')">نسخ</button>
+        <button onclick="document.execCommand('paste')">لصق</button>
+    </div>
+
     <header>
-        <h1>نظام إدارة المركز التعليمي</h1>
+        <div class="header-right">
+            <h1>نظام إدارة المركز التعليمي</h1>
+            <span id="clockDisplay"></span>
+            <span id="dateDisplay"></span>
+        </div>
+        <div class="header-left">
+            <span id="sessionTimer">الوقت: 00:00</span>
+            <button id="arLangBtn" class="btn">AR</button>
+            <button id="enLangBtn" class="btn">EN</button>
+            <button id="toggleSidebarBtn" class="btn">إخفاء القائمة</button>
+            <button id="fullscreenBtn" class="btn">شاشة كاملة</button>
+        </div>
     </header>
 
     <div class="container">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <h2>الأقسام</h2>
-            <button class="tab-btn active" data-title="بيانات المركز">المركز</button>
-            <button class="tab-btn" data-title="كورسات صيف 2025">كورسات صيف ٢٥</button>
-            <button class="tab-btn" data-title="بيانات 2025">٢٠٢٥</button>
-            <button class="tab-btn" data-title="الكورسات الحالية">كورسات</button>
-            <button class="tab-btn" data-title="المنهاج الدراسي">منهاج</button>
-            <button class="tab-btn" data-title="تفاصيل نسبة دنيا">تفاصيل نسبة دنيا</button>
+            <div id="tabsContainer">
+                <button class="tab-btn active" data-id="center">المركز</button>
+                <button class="tab-btn" data-id="summer25">كورسات صيف ٢٥</button>
+                <button class="tab-btn" data-id="data25">٢٠٢٥</button>
+                <button class="tab-btn" data-id="current">كورسات</button>
+                <button class="tab-btn" data-id="curriculum">منهاج</button>
+                <button class="tab-btn" data-id="ratio">تفاصيل نسبة دنيا</button>
+                <button class="tab-btn" data-id="students">الطلاب</button>
+                <button class="tab-btn" data-id="teachers">المعلمين</button>
+                <button class="tab-btn" data-id="finance">المالية</button>
+                <button class="tab-btn" data-id="reports">التقارير</button>
+            </div>
+            <div class="sidebar-actions">
+                <button id="addTabBtn" class="btn outline">إضافة تبويب (+)</button>
+                <button id="renameTabBtn" class="btn outline">إعادة تسمية التبويب</button>
+                <button id="deleteTabBtn" class="btn outline delete">حذف التبويب (-)</button>
+                <button id="cloneTabBtn" class="btn outline">استنساخ التبويب</button>
+                <button id="passwordTabBtn" class="btn outline">حماية بكلمة مرور</button>
+            </div>
         </aside>
 
         <main class="content">
+            <div id="notification" class="notification hidden"></div>
             <h2 id="sectionTitle">بيانات المركز</h2>
             
-            <div class="upload-section">
-                <label for="csvFileInput" class="upload-label">اختر ملف CSV لعرضه:</label>
-                <input type="file" id="csvFileInput" accept=".csv" />
+            <div class="toolbar" id="toolbar">
+                <div class="toolbar-group">
+                    <strong>1. ملف وبيانات:</strong>
+                    <input type="file" id="csvFileInput" accept=".csv" class="hidden" />
+                    <button class="btn" onclick="document.getElementById('csvFileInput').click()">استيراد CSV</button>
+                    <button class="btn" id="exportCsvBtn">تصدير CSV</button>
+                    <button class="btn" id="exportJsonBtn">تصدير JSON</button>
+                    <button class="btn" id="exportTxtBtn">تصدير TXT</button>
+                    <button class="btn" id="saveLocalBtn">حفظ البيانات</button>
+                    <button class="btn" id="loadLocalBtn">استرجاع البيانات</button>
+                    <button class="btn delete" id="clearLocalBtn">مسح الحفظ</button>
+                    <button class="btn" id="backupBtn">أخذ نسخة احتياطية</button>
+                    <button class="btn" id="restoreBtn">استعادة النسخة</button>
+                    <button class="btn" id="autoSaveToggle">تفعيل الحفظ التلقائي</button>
+                </div>
+
+                <div class="toolbar-group">
+                    <strong>2. العرض والتنسيق:</strong>
+                    <button class="btn" id="darkModeBtn">الوضع الليلي</button>
+                    <button class="btn" id="lightModeBtn">الوضع النهاري</button>
+                    <button class="btn" id="zoomInBtn">تكبير +</button>
+                    <button class="btn" id="zoomOutBtn">تصغير -</button>
+                    <button class="btn" id="printBtn">طباعة الجدول</button>
+                    <button class="btn" id="printSelectedBtn">طباعة المحدد</button>
+                    <button class="btn" id="freezeHeaderBtn">تجميد العناوين</button>
+                    <button class="btn" id="showRowNumsBtn">أرقام الصفوف</button>
+                    <button class="btn" id="themeBlueBtn">ثيم أزرق</button>
+                    <button class="btn" id="themeGreenBtn">ثيم أخضر</button>
+                </div>
+
+                <div class="toolbar-group">
+                    <strong>3. إدارة الصفوف:</strong>
+                    <button class="btn" id="addRowBtn">إضافة صف</button>
+                    <button class="btn delete" id="deleteRowBtn">حذف الصف الأخير</button>
+                    <button class="btn" id="duplicateRowBtn">تكرار الصف</button>
+                    <button class="btn" id="moveRowUpBtn">نقل لأعلى</button>
+                    <button class="btn" id="moveRowDownBtn">نقل لأسفل</button>
+                    <button class="btn" id="selectAllBtn">تحديد الكل</button>
+                    <button class="btn delete" id="deleteSelectedBtn">حذف المحدد</button>
+                    <button class="btn delete" id="clearTableBtn">تفريغ الجدول</button>
+                    <button class="btn" id="randomizeRowsBtn">ترتيب عشوائي</button>
+                    <button class="btn" id="highlightRowBtn">تظليل الصف</button>
+                </div>
+
+                <div class="toolbar-group">
+                    <strong>4. إدارة الأعمدة:</strong>
+                    <button class="btn" id="addColumnBtn">إضافة عمود</button>
+                    <button class="btn delete" id="deleteColumnBtn">حذف العمود الأخير</button>
+                    <button class="btn" id="renameColumnBtn">تغيير اسم عمود</button>
+                    <button class="btn" id="sortAscBtn">فرز تصاعدي</button>
+                    <button class="btn" id="sortDescBtn">فرز تنازلي</button>
+                    <button class="btn" id="hideColumnBtn">إخفاء عمود</button>
+                    <button class="btn" id="showColumnsBtn">إظهار الأعمدة</button>
+                    <button class="btn" id="alignCenterBtn">توسيط النص</button>
+                    <button class="btn" id="alignRightBtn">محاذاة لليمين</button>
+                    <button class="btn" id="alignLeftBtn">محاذاة لليسار</button>
+                </div>
+
+                <div class="toolbar-group">
+                    <strong>5. تحرير الخلايا:</strong>
+                    <button class="btn" id="editCellBtn">تفعيل التعديل</button>
+                    <button class="btn" id="lockTableBtn">قفل الجدول</button>
+                    <button class="btn" id="clearCellBtn">مسح الخلايا المحددة</button>
+                    <button class="btn" id="uppercaseBtn">حروف كبيرة</button>
+                    <button class="btn" id="lowercaseBtn">حروف صغيرة</button>
+                    <button class="btn" id="trimBtn">إزالة المسافات</button>
+                    <button class="btn" id="boldBtn">عريض</button>
+                    <button class="btn" id="italicBtn">مائل</button>
+                    <button class="btn" id="colorRedBtn">لون أحمر</button>
+                    <button class="btn" id="colorBlueBtn">لون أزرق</button>
+                </div>
+
+                <div class="toolbar-group">
+                    <strong>6. الأدوات والعمليات:</strong>
+                    <input type="text" id="searchInput" placeholder="بحث شامل..." class="search-input">
+                    <input type="text" id="replaceInput" placeholder="استبدال بـ..." class="search-input">
+                    <button class="btn" id="replaceBtn">استبدال</button>
+                    <button class="btn" id="removeDupBtn">حذف المكرر</button>
+                    <button class="btn" id="highlightDupBtn">تظليل المكرر</button>
+                    <button class="btn" id="countRowsBtn">عدد الصفوف</button>
+                    <button class="btn" id="sumColBtn">مجموع عمود</button>
+                    <button class="btn" id="avgColBtn">متوسط عمود</button>
+                    <button class="btn" id="minMaxBtn">أعلى/أقل قيمة</button>
+                    <button class="btn" id="generateIdBtn">توليد ID</button>
+                </div>
+
+                <div class="toolbar-group">
+                    <strong>7. عمليات متقدمة:</strong>
+                    <button class="btn" id="undoBtn">تراجع</button>
+                    <button class="btn" id="redoBtn">إعادة</button>
+                    <button class="btn" id="markEmptyBtn">تحديد الفارغ</button>
+                    <button class="btn" id="fillEmptyBtn">ملء الفارغ بـ (-)</button>
+                    <button class="btn" id="stripHtmlBtn">إزالة أكواد HTML</button>
+                    <button class="btn" id="prefixBtn">إضافة بادئة</button>
+                    <button class="btn" id="suffixBtn">إضافة لاحقة</button>
+                    <button class="btn" id="numOnlyBtn">أرقام فقط</button>
+                    <button class="btn" id="textOnlyBtn">نصوص فقط</button>
+                    <button class="btn" id="showLogsBtn">سجل العمليات</button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <strong>8. ميزات إضافية وتفاعلية:</strong>
+                    <button class="btn" id="soundToggleBtn">تفعيل الأصوات</button>
+                    <button class="btn" id="paginationToggleBtn">تفعيل الصفحات</button>
+                    <button class="btn" id="nextPageBtn">الصفحة التالية</button>
+                    <button class="btn" id="prevPageBtn">الصفحة السابقة</button>
+                    <button class="btn" id="rowHoverToggleBtn">تظليل عند المرور</button>
+                    <button class="btn" id="multiSelectToggleBtn">تحديد متعدد</button>
+                    <button class="btn" id="checkboxColBtn">عمود الاختيار</button>
+                    <button class="btn" id="ratingColBtn">عمود التقييم</button>
+                    <button class="btn" id="noteColBtn">عمود الملاحظات</button>
+                    <button class="btn" id="welcomeModalBtn">نافذة الترحيب</button>
+                </div>
             </div>
 
-            <div class="table-container" id="tableContainer">
-                <p class="placeholder-text">يرجى رفع ملف CSV لعرض البيانات هنا...</p>
+            <div class="table-container drop-zone" id="tableContainer">
+                <p class="placeholder-text">اسحب وأفلت ملف CSV هنا أو استخدم الأزرار للبدء...</p>
+            </div>
+            
+            <div id="statsPanel" class="stats-panel">
+                الصفوف: <span id="statRows">0</span> | الأعمدة: <span id="statCols">0</span> | الكلمات: <span id="statWords">0</span> | الحروف: <span id="statChars">0</span>
             </div>
         </main>
+    </div>
+
+    <div id="welcomeModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>مرحباً بك في النظام بـ 100 ميزة!</h2>
+            <p>تم تفعيل جميع الميزات المطلوبة بنجاح.</p>
+            <button id="closeModalBtn" class="btn">حسناً، ابدأ العمل</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
