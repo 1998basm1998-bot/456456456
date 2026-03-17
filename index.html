@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المركز التعليمي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>نظام إدارة المركز التعليمي</h1>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>الأقسام</h2>
+            <button class="tab-btn active" data-title="بيانات المركز">المركز</button>
+            <button class="tab-btn" data-title="كورسات صيف 2025">كورسات صيف ٢٥</button>
+            <button class="tab-btn" data-title="بيانات 2025">٢٠٢٥</button>
+            <button class="tab-btn" data-title="الكورسات الحالية">كورسات</button>
+            <button class="tab-btn" data-title="المنهاج الدراسي">منهاج</button>
+            <button class="tab-btn" data-title="تفاصيل نسبة دنيا">تفاصيل نسبة دنيا</button>
+        </aside>
+
+        <main class="content">
+            <h2 id="sectionTitle">بيانات المركز</h2>
+            
+            <div class="upload-section">
+                <label for="csvFileInput" class="upload-label">اختر ملف CSV لعرضه:</label>
+                <input type="file" id="csvFileInput" accept=".csv" />
+            </div>
+
+            <div class="table-container" id="tableContainer">
+                <p class="placeholder-text">يرجى رفع ملف CSV لعرض البيانات هنا...</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
